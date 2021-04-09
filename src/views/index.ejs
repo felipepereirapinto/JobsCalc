@@ -33,8 +33,10 @@
           <span id="notification">
             <img src="/images/alert-octagon.svg" alt="Alerta" />
 
-            <% if( freeHours > 0) { %> 
-              Você tem <%= freeHours %>  horas livres no seu dia
+            <% if( freeHours == 1) { %> 
+              Você tem 1 hora livre no seu dia
+            <% } else if ( freeHours > 0 ){ %> 
+              Você tem <%= freeHours %> horas livres no seu dia
             <% } else { %> 
               Você não tem horas livres
             <% } %> 
@@ -91,7 +93,7 @@
                 <span>Prazo</span>
                 <p>
                   <% if(job.status === 'progress') { %>
-                    <%= job.remaining %>  dias para a entrega
+                    <%= job.remaining %> dias para a entrega
                   <% } else { %>
                     Prazo encerrado
                   <% } %> 

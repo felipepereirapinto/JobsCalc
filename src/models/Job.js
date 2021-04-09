@@ -1,30 +1,52 @@
-let data = [
-  {
-    id: 1,
-    name: 'dev.finances',
-    'daily-hours': 2,
-    'total-hours': 20,
-    created_at: Date.now()
-  },
-  {
-    id: 2,
-    name: 'JobsCalc',
-    'daily-hours': 3,
-    'total-hours': 60,
-    created_at: Date.now()
-  },
-]
+const Database = require('../db/config')
 
 module.exports = {
-  get() {
+  async get() {
+    const db = await Database()
+
+    const data = await db.all(`SELECT * FROM jobs`)
+
+    await db.close()
+
     return data
   },
+  
+  async update(updatedJob, jobId) {
+    const db = await Database()
 
-  update(updatedJobs) {
-    data = updatedJobs
+    await db.run(`UPDATE jobs SET 
+      name = "${updatedJob.name}",
+      dailyHours = ${updatedJob.dailyHours},
+      totalHours = ${updatedJob.totalHours}
+      WHERE id = ${jobId}
+    `)
+    
+    await db.close()
   },
 
-  delete(id) {
-    data = data.filter( job => Number(job.id) !==  Number(id) )
+  async delete(id) {
+    const db = await Database()
+
+    await db.run(`DELETE FROM jobs WHERE id = ${id}`)
+    
+    await db.close()
+  },
+
+  async create(newJob) {
+    const db = await Database()
+
+    await db.run(`INSERT INTO jobs (
+      name,
+      dailyHours,
+      totalHours,
+      createdAt
+    ) VALUES (
+      "${newJob.name}",
+      ${newJob.dailyHours},
+      ${newJob.totalHours},
+      ${newJob.createdAt}
+    )`)
+
+    await db.close()
   }
 }
